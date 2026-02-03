@@ -1,0 +1,398 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Header from '../components/Header.astro';
+import projectsData from '../data/projects.json';
+
+const projects = projectsData.projects;
+const categories = ['all', ...new Set(projects.map(p => p.category))];
+---
+
+<Layout title="Work — Ilkin M">
+  <Header />
+  
+  <main class="work-page">
+    <section class="work-hero">
+      <h1 class="work-title">selected work</h1>
+      <p class="work-subtitle">a collection of projects spanning tech and art</p>
+    </section>
+
+    <section class="filters">
+      <div class="filter-buttons">
+        {categories.map((cat, index) => (
+          <button 
+            class={`filter-btn ${index === 0 ? 'active' : ''}`} 
+            data-category={cat}
+          >
+            {cat}
+          </button>
+        ))}
+      </div>
+    </section>
+
+    <section class="gallery">
+      <div class="gallery-grid">
+        {projects.map((project, index) => (
+          <a 
+            href={project.link} 
+            class={`gallery-item ${project.featured ? 'featured' : ''}`}
+            data-category={project.category}
+            style={`--delay: ${index * 0.05}s`}
+          >
+            <div class="item-image">
+              <div class="image-placeholder">
+                <span class="placeholder-icon">◈</span>
+              </div>
+              <div class="item-overlay">
+                <span class="view-project">
+                  view project
+                  <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M7 17L17 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M7 7H17V17" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                </span>
+              </div>
+            </div>
+            <div class="item-info">
+              <div class="item-meta">
+                <span class="item-category">{project.category}</span>
+                <span class="item-year">{project.year}</span>
+              </div>
+              <h2 class="item-title">{project.title}</h2>
+              <p class="item-description">{project.description}</p>
+            </div>
+          </a>
+        ))}
+      </div>
+    </section>
+
+    <footer class="work-footer">
+      <a href="/" class="back-link">
+        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M19 12H5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M12 19L5 12L12 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        back to home
+      </a>
+    </footer>
+  </main>
+</Layout>
+
+<style>
+  .work-page {
+    min-height: 100vh;
+    padding-top: 6rem;
+  }
+
+  .work-hero {
+    padding: 4rem 3rem 3rem;
+    max-width: 1400px;
+    margin: 0 auto;
+  }
+
+  .work-title {
+    font-family: var(--font-serif);
+    font-size: clamp(2.5rem, 6vw, 4rem);
+    font-weight: 400;
+    margin: 0 0 1rem;
+    letter-spacing: -0.02em;
+  }
+
+  .work-subtitle {
+    font-family: var(--font-mono);
+    font-size: 1rem;
+    color: var(--color-muted);
+    margin: 0;
+  }
+
+  .filters {
+    padding: 0 3rem 2rem;
+    max-width: 1400px;
+    margin: 0 auto;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  }
+
+  .filter-buttons {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+  }
+
+  .filter-btn {
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    letter-spacing: 0.05em;
+    padding: 0.5rem 1rem;
+    background: transparent;
+    border: 1px solid var(--color-text);
+    border-radius: 20px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-transform: lowercase;
+  }
+
+  .filter-btn:hover,
+  .filter-btn.active {
+    background: var(--color-text);
+    color: var(--color-bg);
+  }
+
+  .gallery {
+    padding: 3rem;
+    max-width: 1400px;
+    margin: 0 auto;
+  }
+
+  .gallery-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2rem;
+  }
+
+  .gallery-item {
+    text-decoration: none;
+    color: inherit;
+    display: flex;
+    flex-direction: column;
+    opacity: 0;
+    animation: fadeInUp 0.6s ease forwards;
+    animation-delay: var(--delay);
+    transition: transform 0.3s ease;
+  }
+
+  .gallery-item:hover {
+    transform: translateY(-8px);
+  }
+
+  .gallery-item.featured {
+    grid-column: span 1;
+  }
+
+  .gallery-item.hidden {
+    display: none;
+  }
+
+  .item-image {
+    position: relative;
+    aspect-ratio: 4/3;
+    overflow: hidden;
+    border-radius: 12px;
+    margin-bottom: 1rem;
+  }
+
+  .image-placeholder {
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, #f0f0f0 0%, #e0e0e0 50%, #f5f5f5 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.5s ease;
+  }
+
+  .gallery-item:hover .image-placeholder {
+    transform: scale(1.05);
+  }
+
+  .placeholder-icon {
+    font-size: 3rem;
+    color: #ccc;
+    transition: transform 0.3s ease;
+  }
+
+  .gallery-item:hover .placeholder-icon {
+    transform: rotate(45deg);
+  }
+
+  .item-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.7);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+
+  .gallery-item:hover .item-overlay {
+    opacity: 1;
+  }
+
+  .view-project {
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    color: white;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.25rem;
+    border: 1px solid white;
+    border-radius: 4px;
+    transition: all 0.3s ease;
+  }
+
+  .view-project svg {
+    width: 16px;
+    height: 16px;
+  }
+
+  .view-project:hover {
+    background: white;
+    color: black;
+  }
+
+  .item-info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .item-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .item-category {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: var(--color-muted);
+    background: rgba(0, 0, 0, 0.05);
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+  }
+
+  .item-year {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--color-muted);
+  }
+
+  .item-title {
+    font-family: var(--font-display);
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin: 0;
+    letter-spacing: -0.01em;
+  }
+
+  .item-description {
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    line-height: 1.6;
+    color: var(--color-muted);
+    margin: 0;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .work-footer {
+    padding: 4rem 3rem;
+    max-width: 1400px;
+    margin: 0 auto;
+    border-top: 1px solid rgba(0, 0, 0, 0.1);
+  }
+
+  .back-link {
+    font-family: var(--font-mono);
+    font-size: 0.9rem;
+    color: var(--color-text);
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+    transition: gap 0.3s ease;
+  }
+
+  .back-link:hover {
+    gap: 1rem;
+  }
+
+  .back-link svg {
+    width: 20px;
+    height: 20px;
+  }
+
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @media (max-width: 1024px) {
+    .gallery-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (max-width: 768px) {
+    .work-hero,
+    .filters,
+    .gallery,
+    .work-footer {
+      padding-left: 1.5rem;
+      padding-right: 1.5rem;
+    }
+
+    .gallery-grid {
+      grid-template-columns: 1fr;
+      gap: 2.5rem;
+    }
+
+    .work-title {
+      font-size: 2.5rem;
+    }
+
+    .filter-buttons {
+      gap: 0.5rem;
+    }
+
+    .filter-btn {
+      font-size: 0.75rem;
+      padding: 0.4rem 0.8rem;
+    }
+  }
+</style>
+
+<script>
+  const filterBtns = document.querySelectorAll('.filter-btn');
+  const galleryItems = document.querySelectorAll('.gallery-item');
+
+  filterBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      // Update active state
+      filterBtns.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+
+      const category = btn.getAttribute('data-category');
+
+      // Filter items
+      galleryItems.forEach((item, index) => {
+        const itemCategory = item.getAttribute('data-category');
+        
+        if (category === 'all' || itemCategory === category) {
+          item.classList.remove('hidden');
+          (item as HTMLElement).style.setProperty('--delay', `${index * 0.05}s`);
+          item.classList.remove('fadeInUp');
+          void (item as HTMLElement).offsetWidth; // Trigger reflow
+          (item as HTMLElement).style.animation = 'none';
+          setTimeout(() => {
+            (item as HTMLElement).style.animation = '';
+          }, 10);
+        } else {
+          item.classList.add('hidden');
+        }
+      });
+    });
+  });
+</script>
+

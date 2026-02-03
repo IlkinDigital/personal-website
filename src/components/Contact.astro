@@ -1,0 +1,255 @@
+---
+const socialLinks = [
+  { label: 'linkedin', href: 'https://www.linkedin.com/in/ilkinmammadli/', icon: '/linkedin.png' },
+  { label: 'github', href: 'https://github.com/IlkinDigital', icon: '/github.png' },
+];
+---
+
+<section class="contact" id="contact">
+  <div class="contact-bg">
+    <div class="bg-circle bg-circle-1"></div>
+    <div class="bg-circle bg-circle-2"></div>
+  </div>
+
+  <div class="contact-container">
+    <div class="contact-main">
+      <h2 class="contact-title">
+        <span class="title-line">let's build</span>
+        <span class="title-line title-accent">something</span>
+        <span class="title-line">together.</span>
+        <a href="mailto:ilkin@gatech.edu" class="title-line title-email">ilkin@gatech.edu</a>
+      </h2>
+    </div>
+
+    <div class="social-section">
+      <div class="social-icons">
+        {socialLinks.map((link) => (
+          <a href={link.href} class="social-link" aria-label={link.label} target="_blank" rel="noopener noreferrer">
+            <img src={link.icon} alt={link.label} class="social-icon" />
+          </a>
+        ))}
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .contact {
+    background: var(--color-bg-dark);
+    color: var(--color-text-light);
+    padding: 8rem 3rem;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .contact-bg {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    overflow: hidden;
+  }
+
+  .bg-circle {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(80px);
+    opacity: 0.12;
+  }
+
+  .bg-circle-1 {
+    width: 600px;
+    height: 600px;
+    background: linear-gradient(135deg, #00d4ff 0%, #7c3aed 100%);
+    top: -200px;
+    right: -100px;
+    animation: float 20s ease-in-out infinite;
+  }
+
+  .bg-circle-2 {
+    width: 400px;
+    height: 400px;
+    background: linear-gradient(135deg, #f472b6 0%, #fb923c 100%);
+    bottom: -100px;
+    left: -100px;
+    animation: float 15s ease-in-out infinite reverse;
+  }
+
+  @keyframes float {
+    0%, 100% {
+      transform: translate(0, 0) scale(1);
+    }
+    50% {
+      transform: translate(30px, -30px) scale(1.1);
+    }
+  }
+
+  .contact-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6rem;
+    position: relative;
+    z-index: 1;
+  }
+
+  .contact-main {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .contact-title {
+    font-family: var(--font-serif);
+    font-size: clamp(3.5rem, 12vw, 7rem);
+    font-weight: 400;
+    line-height: 1.05;
+    margin: 0;
+    letter-spacing: -0.03em;
+  }
+
+  .title-line {
+    display: block;
+  }
+
+  .title-accent {
+    font-style: italic;
+    background: linear-gradient(135deg, #00d4ff 0%, #7c3aed 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .title-email {
+    font-style: italic;
+    margin-top: 0.5rem;
+    text-decoration: none;
+    color: var(--color-text-light);
+    -webkit-text-fill-color: var(--color-text-light);
+    position: relative;
+    display: inline-block;
+  }
+
+  .title-email::after {
+    content: '';
+    position: absolute;
+    bottom: 0.1em;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background: var(--color-text-light);
+    transform: scaleX(0);
+    transform-origin: right;
+    transition: transform 0.3s ease;
+  }
+
+  .title-email:hover::after {
+    transform: scaleX(1);
+    transform-origin: left;
+  }
+
+  .social-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .social-icons {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+  }
+
+  .social-link {
+    display: block;
+    transition: transform 0.3s ease, opacity 0.3s ease;
+  }
+
+  .social-link:hover {
+    transform: scale(1.1) rotate(-3deg);
+    opacity: 0.9;
+  }
+
+  .social-icon {
+    width: 80px;
+    height: 80px;
+    object-fit: contain;
+    filter: brightness(0) invert(1);
+    transition: filter 0.3s ease;
+  }
+
+  .social-link:hover .social-icon {
+    filter: brightness(0) invert(1) drop-shadow(0 0 20px rgba(255, 255, 255, 0.5));
+  }
+
+  @media (max-width: 1024px) {
+    .contact-container {
+      flex-direction: column;
+      gap: 4rem;
+      text-align: center;
+    }
+
+    .contact-main {
+      align-items: center;
+    }
+
+    .social-icons {
+      flex-direction: row;
+      gap: 3rem;
+    }
+  }
+
+  @media (max-width: 768px) {
+    .contact {
+      padding: 4rem 1.5rem;
+    }
+
+    .contact-title {
+      font-size: clamp(2.75rem, 11vw, 4rem);
+    }
+
+    .title-email::after {
+      height: 2px;
+    }
+
+    .social-icon {
+      width: 70px;
+      height: 70px;
+    }
+
+    .social-icons {
+      gap: 2.5rem;
+    }
+
+    .bg-circle-1 {
+      width: 350px;
+      height: 350px;
+    }
+
+    .bg-circle-2 {
+      width: 250px;
+      height: 250px;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .contact {
+      padding: 3rem 1rem;
+    }
+
+    .contact-container {
+      gap: 3rem;
+    }
+
+    .social-icons {
+      gap: 2rem;
+    }
+
+    .social-icon {
+      width: 60px;
+      height: 60px;
+    }
+  }
+</style>

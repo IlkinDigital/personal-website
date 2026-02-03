@@ -1,0 +1,262 @@
+---
+import mainImage from '../assets/ilkin.JPG';
+
+const statusMessage = "working on WalFeed for the students in Azerbaijan";
+---
+
+<section class="hero" id="about"> 
+
+  <div class="hero-container">
+    <div class="hero-content">
+      <!-- Status Badge -->
+      <div class="status-wrapper">
+        <div class="status-bubble">
+          <div class="status-badge">
+            <span>status</span>
+          </div>
+          <p>{statusMessage}</p>
+        </div>
+      </div>
+
+      <!-- Main Content -->
+      <h1 class="hero-title">hello, i'm ilkin.</h1>
+      
+      <p class="hero-description">
+        i'm a senior at georgia Tech studying
+        computer science, focusing on
+        immersive technology and generative
+        ai. organized global events with a
+        total of 2k+ participants. led teams
+        and expanded groups
+      </p>
+    </div>
+
+    <!-- Profile Image -->
+    <div class="hero-image">
+      <div class="image-container">
+        <img src={mainImage.src} alt="Ilkin" class="profile-image" />
+      </div>
+    </div>
+  </div>
+
+  <!-- Scroll Indicator -->
+  <a href="#work" class="scroll-indicator">
+    <svg viewBox="0 0 40 50" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M20 50L0 0H40L20 50Z" stroke="currentColor" stroke-width="2" fill="none"/>
+    </svg>
+  </a>
+</section>
+
+<style>
+  .hero {
+    min-height: 100vh;
+    position: relative;
+    padding: 8rem 3rem 4rem;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  .deco-triangle {
+    position: absolute;
+    color: var(--color-text);
+    opacity: 0.8;
+  }
+
+  .deco-top-left {
+    top: 6rem;
+    left: 3rem;
+    width: 20px;
+  }
+
+  .hero-container {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 5rem;
+    max-width: 1200px;
+    margin: 0 auto;
+    width: 100%;
+    padding: 0 2rem;
+  }
+
+  .hero-content {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    max-width: 420px;
+  }
+
+  .status-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    margin-bottom: 1rem;
+  }
+
+  .status-bubble {
+    position: relative;
+    /* background: linear-gradient(135deg, #2c02ff 0%, #3a8eed 100%); */
+    background: black;
+    color: #fff;
+    padding: 2rem 1.5rem 1.5rem;
+    border-radius: 20px;
+    max-width: 300px;
+    font-family: var(--font-mono);
+    font-size: 0.95rem;
+    line-height: 1.6;
+  }
+
+  .status-bubble p {
+    margin: 0;
+  }
+
+  .status-badge {
+    position: absolute;
+    top: -14px;
+    right: 20px;
+    background: var(--color-bg);
+    border: 2px solid black;
+    border-radius: 20px;
+    padding: 0.4rem 1.2rem;
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    font-weight: 500;
+    letter-spacing: 0.02em;
+    color: black;
+  }
+
+  .hero-title {
+    font-family: var(--font-serif);
+    font-size: clamp(2.5rem, 6vw, 4rem);
+    font-weight: 400;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    margin: 0;
+  }
+
+  .hero-description {
+    font-family: var(--font-mono);
+    font-size: 0.95rem;
+    line-height: 1.8;
+    max-width: 400px;
+    color: var(--color-text);
+  }
+
+  .hero-image {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .image-container {
+    width: 350px;
+    height: 450px;
+    border-radius: 8px;
+    overflow: hidden;
+    position: relative;
+  }
+
+  .profile-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center top;
+    transition: transform 0.5s ease;
+  }
+
+  .image-container:hover .profile-image {
+    transform: scale(1.03);
+  }
+
+  .scroll-indicator {
+    position: absolute;
+    bottom: 3rem;
+    left: 50%;
+    transform: translateX(-50%);
+    color: var(--color-text);
+    width: 20px;
+    opacity: 0.8;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    animation: bounce 2s infinite;
+  }
+
+  .scroll-indicator:hover {
+    opacity: 1;
+    transform: translateX(-50%) translateY(5px);
+  }
+
+  @keyframes bounce {
+    0%, 20%, 50%, 80%, 100% {
+      transform: translateX(-50%) translateY(0);
+    }
+    40% {
+      transform: translateX(-50%) translateY(-10px);
+    }
+    60% {
+      transform: translateX(-50%) translateY(-5px);
+    }
+  }
+
+  @media (max-width: 1024px) {
+    .hero-container {
+      flex-direction: column;
+      gap: 3rem;
+    }
+
+    .hero-image {
+      order: -1;
+    }
+
+    .hero-content {
+      text-align: center;
+      align-items: center;
+    }
+
+    .status-wrapper {
+      align-items: center;
+    }
+
+    .image-container {
+      width: 280px;
+      height: 360px;
+    }
+  }
+
+  @media (max-width: 768px) {
+    .hero {
+      padding: 7rem 1.5rem 4rem;
+    }
+
+    .deco-top-left {
+      left: 1.5rem;
+    }
+
+    .hero-container {
+      padding: 0 1rem;
+    }
+
+    .hero-image {
+      display: none;
+    }
+
+    .hero-title {
+      font-size: 2.5rem;
+    }
+
+    .status-bubble {
+      max-width: 260px;
+      font-size: 0.85rem;
+      padding: 1.75rem 1.25rem 1.25rem;
+    }
+
+    .status-badge {
+      right: 15px;
+      top: -12px;
+      padding: 0.35rem 1rem;
+      font-size: 0.8rem;
+    }
+  }
+</style>
+
