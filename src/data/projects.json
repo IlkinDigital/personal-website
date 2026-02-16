@@ -1,84 +1,81 @@
 {
   "projects": [
     {
+      "id": "walfeed",
+      "title": "WalFeed",
+      "description": "An anonymous social media platform for students in Azerbaijan to share their ideas and advice with their community.",
+      "shortDescription": "Anonymous social media platform for students in Azerbaijan",
+      "tags": ["web dev", "React", "JS", "Supabase", "PostgreSQL"],
+      "year": "2026",
+      "link": "https://www.walfeed.net/",
+      "image": "/projects/walfeed.png",
+      "featured": true
+    },
+    {
       "id": "vast-engine",
       "title": "vast engine",
       "description": "a custom game engine for real-time applications development with modern rendering pipeline and cross-platform support",
       "shortDescription": "custom game engine for real-time applications development",
-      "category": "graphics",
-      "year": "2024",
-      "link": "#",
+      "tags": ["graphics", "C++", "OpenGL"],
+      "year": "2023",
+      "link": "https://github.com/IlkinDigital/VastEngine",
+      "image": "/projects/vast-engine.png",
       "featured": true
     },
     {
-      "id": "vr-ar-gt",
+      "id": "gtxr",
       "title": "GTXR",
       "description": "student organization for immersive technology and extended reality at georgia tech, hosting workshops and hackathons",
       "shortDescription": "student organization for immersive technology and extended reality",
-      "category": "organization",
-      "year": "2023",
-      "link": "#",
+      "tags": ["organization"],
+      "year": "2023-2025",
+      "link": "https://www.gtxr.club/",
+      "image": "/projects/gtxr.jpeg",
       "featured": true
     },
     {
-      "id": "flashysar",
-      "title": "flashysar",
-      "description": "ai-powered flashcard generator for accelerated learning using spaced repetition and natural language processing",
-      "shortDescription": "ai-powered flashcard generator for accelerated learning",
-      "category": "ai/ml",
+      "id": "immersegt",
+      "title": "ImmerseGT 2025",
+      "description": "Directed ImmerseGT 2025, one of the largest XR hackathons in the world. Bringing together students and industry professionals to build innovative XR solutions. Sponsored by Snap, Niantic, Meshy, and more.",
+      "shortDescription": "Directed ImmerseGT 2025, one of the largest XR hackathons in the world.",
+      "tags": ["organization"],
+      "year": "2025",
+      "link": "https://www.immersegt.com/",
+      "image": "/projects/immersegt.jpg",
+      "featured": true
+    },
+    {
+      "id": "flashy-ar",
+      "title": "Flashys",
+      "description": "Tattoo app that lets users visualize tattoos on their bodies using computer vision and augmented reality. Built using Unity during Georgia Tech's HackGT X.",
+      "shortDescription": "AR tattoo app that lets users visualize tattoos on their bodies.",
+      "tags": ["xr", "Unity", "C#", "Java"],
+      "year": "2023",
+      "link": "https://devpost.com/software/flashys?ref_content=my-projects-tab&ref_feature=my_projects",
+      "image": "/projects/flashys.png",
+      "featured": true
+    },
+    {
+      "id": "rosa",
+      "title": "Project Rosa",
+      "description": "Mixed Reality colocated furniture and home decor platform that let's users visualize new furniture in their homes on Meta Quest before purchasing. Developed with a team of 2 developers and 2 designers during MIT's Reality Hack 2025.",
+      "shortDescription": "Mixed Reality furniture and home decor platform on Meta Quest.",
+      "tags": ["xr", "Unity", "C#", "Meta SDK"],
+      "year": "2025",
+      "link": "https://devpost.com/software/rosa-7d1p05?_gl=1*1y0wokr*_gcl_au*MjEwODY4NzQ2Ny4xNzY5OTA0OTYz*_ga*MjAxMDMwNzY0Mi4xNzY5OTA0OTYz*_ga_0YHJK3Y10M*czE3NzA5MzQ5MzAkbzQkZzAkdDE3NzA5MzQ5MzAkajYwJGwwJGgw",
+      "image": "/projects/rosa.png",
+      "featured": true
+    },
+    {
+      "id": "spotify-wrapped",
+      "title": "Spotify Wrapped",
+      "description": "Collaborated with a team to build a full-stack web app using Python (Django) and HTML/CSS that visualizes users’ top artists, songs, and genres from Spotify; deployed on Heroku for public access.",
+      "shortDescription": "Full-stack web app that visualizes Spotify users' top artists, songs, and genres.",
+      "tags": ["web dev", "python", "django", "spotify api"],
       "year": "2024",
-      "link": "#",
+      "link": "https://github.com/IlkinDigital/spotify-taste-summary",
+      "image": "/projects/spotify.png",
       "featured": true
-    },
-    {
-      "id": "neural-canvas",
-      "title": "neural canvas",
-      "description": "generative art platform using diffusion models to create unique digital artworks from text descriptions",
-      "shortDescription": "generative art platform using diffusion models",
-      "category": "ai/ml",
-      "year": "2023",
-      "link": "#",
-      "featured": false
-    },
-    {
-      "id": "spatial-notes",
-      "title": "spatial notes",
-      "description": "ar note-taking app that pins virtual sticky notes to real-world locations using computer vision",
-      "shortDescription": "ar note-taking app with location-based virtual notes",
-      "category": "xr",
-      "year": "2023",
-      "link": "#",
-      "featured": false
-    },
-    {
-      "id": "code-collab",
-      "title": "code collab",
-      "description": "real-time collaborative coding environment with integrated video chat and ai-assisted debugging",
-      "shortDescription": "real-time collaborative coding environment",
-      "category": "web-dev",
-      "year": "2022",
-      "link": "#",
-      "featured": false
-    },
-    {
-      "id": "motion-ui",
-      "title": "motion ui",
-      "description": "gesture-based interface library for building intuitive hand-tracking interactions in vr applications",
-      "shortDescription": "gesture-based interface library for vr",
-      "category": "xr",
-      "year": "2022",
-      "link": "#",
-      "featured": false
-    },
-    {
-      "id": "echo-chamber",
-      "title": "echo chamber",
-      "description": "audio visualization experiment that transforms sound waves into immersive 3d environments",
-      "shortDescription": "audio visualization in immersive 3d",
-      "category": "creative",
-      "year": "2022",
-      "link": "#",
-      "featured": false
     }
   ]
 }

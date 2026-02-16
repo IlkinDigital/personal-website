@@ -1,0 +1,7 @@
+<svg width="800" height="600" viewBox="0 0 800 600" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="800" height="600" fill="#F2F2F2"/>
+  <rect x="40" y="40" width="720" height="520" rx="24" fill="#E6E6E6"/>
+  <text x="400" y="310" text-anchor="middle" font-family="monospace" font-size="36" fill="#666666">
+    Spotify Wrapped
+  </text>
+</svg>

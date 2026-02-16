@@ -4,7 +4,8 @@ import Header from '../components/Header.astro';
 import projectsData from '../data/projects.json';
 
 const projects = projectsData.projects;
-const categories = ['all', ...new Set(projects.map(p => p.category))];
+const allTags = new Set(projects.flatMap(p => p.tags));
+const categories = ['all', ...allTags];
 ---
 
 <Layout title="Work — Ilkin M">
@@ -35,13 +36,13 @@ const categories = ['all', ...new Set(projects.map(p => p.category))];
           <a 
             href={project.link} 
             class={`gallery-item ${project.featured ? 'featured' : ''}`}
-            data-category={project.category}
+            data-tags={project.tags.join(',')}
             style={`--delay: ${index * 0.05}s`}
+            target="_blank"
+            rel="noopener noreferrer"
           >
             <div class="item-image">
-              <div class="image-placeholder">
-                <span class="placeholder-icon">◈</span>
-              </div>
+              <img src={project.image} alt={`${project.title} preview`} loading="lazy" />
               <div class="item-overlay">
                 <span class="view-project">
                   view project
@@ -54,7 +55,11 @@ const categories = ['all', ...new Set(projects.map(p => p.category))];
             </div>
             <div class="item-info">
               <div class="item-meta">
-                <span class="item-category">{project.category}</span>
+                <div class="item-tags">
+                  {project.tags.map((tag: string) => (
+                    <span class="item-tag">{tag}</span>
+                  ))}
+                </div>
                 <span class="item-year">{project.year}</span>
               </div>
               <h2 class="item-title">{project.title}</h2>
@@ -179,28 +184,16 @@ const categories = ['all', ...new Set(projects.map(p => p.category))];
     margin-bottom: 1rem;
   }
 
-  .image-placeholder {
+  .item-image img {
     width: 100%;
     height: 100%;
-    background: linear-gradient(135deg, #f0f0f0 0%, #e0e0e0 50%, #f5f5f5 100%);
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    object-fit: cover;
+    display: block;
     transition: transform 0.5s ease;
   }
 
-  .gallery-item:hover .image-placeholder {
+  .gallery-item:hover .item-image img {
     transform: scale(1.05);
-  }
-
-  .placeholder-icon {
-    font-size: 3rem;
-    color: #ccc;
-    transition: transform 0.3s ease;
-  }
-
-  .gallery-item:hover .placeholder-icon {
-    transform: rotate(45deg);
   }
 
   .item-overlay {
@@ -253,7 +246,13 @@ const categories = ['all', ...new Set(projects.map(p => p.category))];
     align-items: center;
   }
 
-  .item-category {
+  .item-tags {
+    display: flex;
+    gap: 0.35rem;
+    flex-wrap: wrap;
+  }
+
+  .item-tag {
     font-family: var(--font-mono);
     font-size: 0.7rem;
     text-transform: uppercase;
@@ -285,7 +284,7 @@ const categories = ['all', ...new Set(projects.map(p => p.category))];
     color: var(--color-muted);
     margin: 0;
     display: -webkit-box;
-    -webkit-line-clamp: 2;
+    -webkit-line-clamp: 4;
     -webkit-box-orient: vertical;
     overflow: hidden;
   }
@@ -377,9 +376,9 @@ const categories = ['all', ...new Set(projects.map(p => p.category))];
 
       // Filter items
       galleryItems.forEach((item, index) => {
-        const itemCategory = item.getAttribute('data-category');
+        const itemTags = (item.getAttribute('data-tags') || '').split(',');
         
-        if (category === 'all' || itemCategory === category) {
+        if (category === 'all' || itemTags.includes(category)) {
           item.classList.remove('hidden');
           (item as HTMLElement).style.setProperty('--delay', `${index * 0.05}s`);
           item.classList.remove('fadeInUp');

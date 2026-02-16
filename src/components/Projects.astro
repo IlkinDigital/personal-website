@@ -1,7 +1,6 @@
 ---
 import projectsData from '../data/projects.json';
 
-// Get all projects for the marquee
 const allProjects = projectsData.projects;
 ---
 
@@ -12,9 +11,9 @@ const allProjects = projectsData.projects;
   
   <div class="marquee-container">
     <div class="marquee-track">
-      <!-- First set of projects -->
+      <!-- Projects list -->
       {allProjects.map((project) => (
-        <a href={project.link} class="project-card">
+        <a href={project.link} class="project-card" target="_blank" rel="noopener noreferrer">
           <div class="project-arrow">
             <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
               <path d="M7 17L17 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -23,12 +22,14 @@ const allProjects = projectsData.projects;
           </div>
           <h3 class="project-title">{project.title}</h3>
           <p class="project-description">{project.shortDescription}</p>
-          <span class="project-category">{project.category}</span>
+          <span class="project-category">{project.tags.join(' · ')}</span>
         </a>
       ))}
-      <!-- Duplicate set for seamless loop -->
+
+      <!-- duplicate projects for loop -->
+
       {allProjects.map((project) => (
-        <a href={project.link} class="project-card">
+        <a href={project.link} class="project-card" target="_blank" rel="noopener noreferrer">
           <div class="project-arrow">
             <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
               <path d="M7 17L17 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -37,7 +38,7 @@ const allProjects = projectsData.projects;
           </div>
           <h3 class="project-title">{project.title}</h3>
           <p class="project-description">{project.shortDescription}</p>
-          <span class="project-category">{project.category}</span>
+          <span class="project-category">{project.tags.join(' · ')}</span>
         </a>
       ))}
     </div>
