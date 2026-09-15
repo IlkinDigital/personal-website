@@ -9,7 +9,7 @@ import Contact from '../components/Contact.astro';
 
 <Layout>
   <Header />
-  <main>
+  <main id="main">
     <Hero />
     <Projects />
     <Media />
@@ -19,6 +19,7 @@ import Contact from '../components/Contact.astro';
 
 <style>
   main {
-    overflow-x: hidden;
+    /* clip keeps sticky working; hidden would break the card stack. */
+    overflow-x: clip;
   }
 </style>

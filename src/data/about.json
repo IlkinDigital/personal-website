@@ -1,0 +1,55 @@
+{
+  "images": [
+    { "src": "/about/01.jpg", "alt": "Ilkin speaking at an event" },
+    { "src": "/about/02.jpg", "alt": "Ilkin with the ImmerseGT team" },
+    { "src": "/about/03.jpg", "alt": "Workshop session in progress" },
+    { "src": "/about/04.jpg", "alt": "Ilkin presenting on stage" },
+    { "src": "/about/05.jpg", "alt": "Hackathon participants building" },
+    { "src": "/about/06.jpg", "alt": "Ilkin working on a headset demo" },
+    { "src": "/about/07.jpg", "alt": "GTXR community gathering" },
+    { "src": "/about/08.jpg", "alt": "Ilkin with collaborators" }
+  ],
+  "essay": [
+    {
+      "type": "lead",
+      "text": "i'm just someone who likes building things other people actually get to use."
+    },
+    {
+      "type": "p",
+      "text": "i grew up in baku. at eighteen i moved west to atlanta to study computer science at georgia tech, which is far enough that you have to rebuild your sense of humor in a second language."
+    },
+    { "type": "map" },
+    {
+      "type": "p",
+      "text": "most of what i know i learned by building something badly first, then rebuilding it once i understood why it broke."
+    },
+    {
+      "type": "p",
+      "text": "graphics were the first thing that really caught me. i wrote vast engine, a small real time engine in c++ and opengl, mostly to find out what actually happens between a mesh and a pixel. nothing teaches you a rendering pipeline like having to write one."
+    },
+    {
+      "type": "pull",
+      "text": "then i put on a headset, and the questions i cared about changed."
+    },
+    {
+      "type": "p",
+      "text": "immersive technology reframed the problem for me. it stopped being about what renders correctly and started being about what feels real to a person standing in a room. i joined gtxr to find people asking the same thing, and ended up helping run it."
+    },
+    {
+      "type": "p",
+      "text": "in 2025 i directed immersegt, one of the largest xr hackathons in the world, with sponsors including snap, niantic and meshy. across the events i have organized, more than two thousand people have shown up to build something over a weekend."
+    },
+    {
+      "type": "pull",
+      "text": "the software i care most about is the software a community keeps using after the demo ends."
+    },
+    {
+      "type": "p",
+      "text": "that is what walfeed is. an anonymous space for students in azerbaijan to say what they actually think and get advice from people in the same position. it is the project i am most protective of, because the people using it are people i know."
+    },
+    {
+      "type": "p",
+      "text": "these days i work at the intersection of immersive technology and generative ai. i am finishing my degree and looking for teams who care as much about how something feels as whether it compiles."
+    }
+  ]
+}

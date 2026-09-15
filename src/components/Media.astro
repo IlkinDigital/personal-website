@@ -1,160 +1,197 @@
 ---
 import mediaData from '../data/media.json';
 
-const mediaItems = mediaData.mediaItems;
+const items = mediaData.mediaItems.map((item) => {
+  const [format, language] = item.type.split('|').map((part) => part.trim());
+  return { ...item, format, language };
+});
 ---
 
 <section class="media" id="media">
-  <div class="media-container">
-    <div class="media-header">
-      <h2 class="media-title">media & talks</h2>
-      <div class="media-line"></div>
-    </div>
+  <div class="section-head" data-reveal>
+    <h2>media &amp; talks</h2>
+    <span class="rule"></span>
+    <span class="count">press</span>
+  </div>
 
-    <div class="media-list">
-      {mediaItems.map((item, index) => (
-        <a href={item.link} class="media-item" target="_blank"
-        rel="noopener noreferrer" style={`--delay: ${index * 0.1}s`}>
-          <div class="media-item-content">
-            <span class="media-type">{item.type}</span>
-            <h3 class="media-item-title">{item.title}</h3>
-          </div>
-          <div class="media-item-meta">
-            <span class="media-date">{item.date}</span>
-            <span class="media-arrow">→</span>
-          </div>
-        </a>
-      ))}
-    </div>
+  <div class="entries">
+    {items.map((item, i) => (
+      <a
+        href={item.link}
+        class="entry"
+        target="_blank"
+        rel="noopener noreferrer"
+        data-entry
+      >
+        <span class="entry-index" data-entry-index>{String(i + 1).padStart(2, '0')}</span>
+
+        <span class="entry-main" data-reveal>
+          <span class="entry-meta">
+            <span>{item.format}</span>
+            <span class="entry-lang">{item.language}</span>
+            <span class="entry-date">{item.date}</span>
+          </span>
+
+          <span class="entry-title">{item.title}</span>
+
+          <span class="entry-go">
+            read
+            <svg viewBox="0 0 16 16" fill="none" aria-hidden="true">
+              <path d="M4 12L12 4M6 4h6v6" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </span>
+        </span>
+      </a>
+    ))}
   </div>
 </section>
 
 <style>
   .media {
-    padding: 6rem 3rem;
-    background: var(--color-bg);
-    position: relative;
+    padding: var(--section-y) var(--gutter);
+    overflow-x: clip;
   }
 
-  .media-container {
-    max-width: 1000px;
+  .entries {
+    display: flex;
+    flex-direction: column;
+    gap: clamp(2.25rem, 4vw, 3.25rem);
+    max-width: 1180px;
     margin: 0 auto;
   }
 
-  .media-header {
-    display: flex;
-    align-items: center;
-    gap: 2rem;
-    margin-bottom: 3rem;
-  }
-
-  .media-title {
-    font-family: var(--font-serif);
-    font-size: 2rem;
-    font-weight: 400;
-    letter-spacing: -0.02em;
-    margin: 0;
-    white-space: nowrap;
-  }
-
-  .media-line {
-    flex: 1;
-    height: 1px;
-    background: var(--color-text);
-    opacity: 0.2;
-  }
-
-  .media-list {
-    display: flex;
-    flex-direction: column;
-    gap: 0;
-  }
-
-  .media-item {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 1.5rem 0;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  .entry {
+    display: grid;
+    grid-template-columns: minmax(0, auto) minmax(0, 1fr);
+    align-items: start;
+    gap: clamp(1.5rem, 5vw, 4rem);
     text-decoration: none;
-    color: inherit;
-    transition: all 0.3s ease;
   }
 
-  .media-item:first-child {
-    border-top: 1px solid rgba(0, 0, 0, 0.1);
+  /* Oversized numeral drifts against the text as you scroll. */
+  .entry-index {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-size: clamp(2.25rem, 5vw, 4rem);
+    line-height: 0.9;
+    letter-spacing: -0.04em;
+    color: var(--accent);
+    opacity: 0.5;
+    font-variant-numeric: tabular-nums;
+    will-change: transform;
+    transition: opacity 500ms var(--ease-out), color 500ms var(--ease-out);
   }
 
-  .media-item:hover {
-    padding-left: 1rem;
-    background: rgba(0, 0, 0, 0.02);
-  }
-
-  .media-item:hover .media-arrow {
-    transform: translateX(5px);
-  }
-
-  .media-item-content {
+  .entry-main {
     display: flex;
     flex-direction: column;
-    gap: 0.5rem;
+    gap: 1rem;
+    padding-top: 0.6rem;
+    border-top: 1px solid var(--rule);
+    transition: border-color 400ms var(--ease-out);
   }
 
-  .media-type {
-    font-family: var(--font-mono);
-    font-size: 0.7rem;
-    text-transform: uppercase;
-    letter-spacing: 0.15em;
-    color: var(--color-muted);
-  }
-
-  .media-item-title {
-    font-family: var(--font-display);
-    font-size: 1.1rem;
-    font-weight: 500;
-    margin: 0;
-  }
-
-  .media-item-meta {
+  .entry-meta {
     display: flex;
     align-items: center;
-    gap: 1.5rem;
+    gap: 1.25rem;
+    font-size: var(--step-micro);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
   }
 
-  .media-date {
-    font-family: var(--font-mono);
-    font-size: 0.85rem;
-    color: var(--color-muted);
+  .entry-lang {
+    color: var(--ink-muted);
   }
 
-  .media-arrow {
-    font-size: 1.25rem;
-    transition: transform 0.3s ease;
+  .entry-date {
+    margin-left: auto;
+    font-variant-numeric: tabular-nums;
   }
 
-  @media (max-width: 768px) {
-    .media {
-      padding: 4rem 1.5rem;
+  .entry-title {
+    font-family: var(--font-display);
+    font-size: clamp(1.2rem, 2.4vw, 1.85rem);
+    line-height: 1.22;
+    letter-spacing: -0.02em;
+    text-wrap: balance;
+  }
+
+  .entry-go {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: var(--step-micro);
+    letter-spacing: 0.1em;
+    color: var(--ink-faint);
+    transition: color 300ms var(--ease-out);
+  }
+
+  .entry-go svg {
+    width: 13px;
+    height: 13px;
+    transition: transform 380ms var(--ease-out);
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .entry:hover .entry-index {
+      opacity: 1;
+      color: var(--accent);
     }
 
-    .media-item {
-      flex-direction: column;
-      align-items: flex-start;
-      gap: 1rem;
+    .entry:hover .entry-main {
+      border-color: var(--ink);
     }
 
-    .media-item-meta {
-      width: 100%;
-      justify-content: space-between;
+    .entry:hover .entry-go {
+      color: var(--ink);
     }
 
-    .media-title {
-      font-size: 1.5rem;
+    .entry:hover .entry-go svg {
+      transform: translate(3px, -3px);
+    }
+  }
+
+  @media (max-width: 720px) {
+    .entry {
+      grid-template-columns: 1fr;
+      gap: 0.5rem;
     }
 
-    .media-item-title {
-      font-size: 1rem;
+    .entry-meta {
+      flex-wrap: wrap;
+      gap: 0.75rem;
+    }
+
+    .entry-date {
+      margin-left: 0;
     }
   }
 </style>
 
+<script>
+  import { gsap, reducedMotion } from '../scripts/motion';
+
+  if (!reducedMotion()) {
+    gsap.utils.toArray<HTMLElement>('[data-entry]').forEach((entry) => {
+      const index = entry.querySelector<HTMLElement>('[data-entry-index]');
+      if (!index) return;
+
+      gsap.fromTo(
+        index,
+        { yPercent: 28 },
+        {
+          yPercent: -28,
+          ease: 'none',
+          scrollTrigger: {
+            trigger: entry,
+            start: 'top bottom',
+            end: 'bottom top',
+            scrub: true,
+          },
+        }
+      );
+    });
+  }
+</script>

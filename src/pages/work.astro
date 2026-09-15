@@ -4,77 +4,70 @@ import Header from '../components/Header.astro';
 import projectsData from '../data/projects.json';
 
 const projects = projectsData.projects;
-const allTags = new Set(projects.flatMap(p => p.tags));
-const categories = ['all', ...allTags];
+// First tag is the discipline; the rest are tools and stay as per-project metadata.
+const categories = ['all', ...new Set(projects.map((p) => p.tags[0]))];
 ---
 
-<Layout title="Work — Ilkin M">
+<Layout
+  title="Work by Ilkin Mammadli"
+  description="Projects across immersive technology, graphics, web and community organizing."
+>
   <Header />
-  
-  <main class="work-page">
-    <section class="work-hero">
-      <h1 class="work-title">selected work</h1>
-      <p class="work-subtitle">a collection of projects spanning tech and art</p>
+
+  <main class="work-page" id="main">
+    <header class="work-intro">
+      <h1>selected work</h1>
+      <p>a collection of projects spanning tech and art.</p>
+    </header>
+
+    <section class="filters" aria-label="Filter projects by discipline">
+      {categories.map((cat, i) => (
+        <button
+          class="filter-btn"
+          data-category={cat}
+          aria-pressed={i === 0 ? 'true' : 'false'}
+        >
+          {cat}
+        </button>
+      ))}
     </section>
 
-    <section class="filters">
-      <div class="filter-buttons">
-        {categories.map((cat, index) => (
-          <button 
-            class={`filter-btn ${index === 0 ? 'active' : ''}`} 
-            data-category={cat}
-          >
-            {cat}
-          </button>
-        ))}
-      </div>
-    </section>
-
-    <section class="gallery">
+    <section class="gallery" aria-live="polite">
       <div class="gallery-grid">
-        {projects.map((project, index) => (
-          <a 
-            href={project.link} 
-            class={`gallery-item ${project.featured ? 'featured' : ''}`}
-            data-tags={project.tags.join(',')}
-            style={`--delay: ${index * 0.05}s`}
+        {projects.map((project, i) => (
+          <a
+            href={project.link}
+            class="tile"
+            data-discipline={project.tags[0]}
+            style={`--ar: ${['4 / 3', '1 / 1', '4 / 5'][i % 3]}`}
             target="_blank"
             rel="noopener noreferrer"
+            data-reveal
           >
-            <div class="item-image">
-              <img src={project.image} alt={`${project.title} preview`} loading="lazy" />
-              <div class="item-overlay">
-                <span class="view-project">
-                  view project
-                  <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M7 17L17 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                    <path d="M7 7H17V17" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                  </svg>
-                </span>
-              </div>
-            </div>
-            <div class="item-info">
-              <div class="item-meta">
-                <div class="item-tags">
-                  {project.tags.map((tag: string) => (
-                    <span class="item-tag">{tag}</span>
-                  ))}
-                </div>
-                <span class="item-year">{project.year}</span>
-              </div>
-              <h2 class="item-title">{project.title}</h2>
-              <p class="item-description">{project.description}</p>
-            </div>
+            <span class="tile-frame">
+              <img src={project.image} alt={`${project.title} preview`} loading="lazy" decoding="async" />
+            </span>
+
+            <span class="tile-meta">
+              <span class="tile-tags">{project.tags.join(', ')}</span>
+              <span class="tile-year">{project.year}</span>
+            </span>
+
+            <h2 class="tile-title">{project.title}</h2>
+            <p class="tile-desc">{project.description}</p>
           </a>
         ))}
       </div>
+
+      <p class="gallery-empty" hidden>
+        nothing filed under that discipline yet. try another filter.
+      </p>
     </section>
 
     <footer class="work-footer">
       <a href="/" class="back-link">
-        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M19 12H5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-          <path d="M12 19L5 12L12 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        <svg viewBox="0 0 16 16" fill="none" aria-hidden="true">
+          <path d="M13 8H3M7 4L3 8l4 4" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"/>
         </svg>
         back to home
       </a>
@@ -84,314 +77,234 @@ const categories = ['all', ...allTags];
 
 <style>
   .work-page {
-    min-height: 100vh;
-    padding-top: 6rem;
+    padding-top: var(--nav-clear);
+    overflow-x: clip;
   }
 
-  .work-hero {
-    padding: 4rem 3rem 3rem;
-    max-width: 1400px;
-    margin: 0 auto;
+  .work-intro {
+    padding: clamp(4rem, 12vh, 7rem) var(--gutter) clamp(2rem, 5vw, 3rem);
   }
 
-  .work-title {
-    font-family: var(--font-serif);
-    font-size: clamp(2.5rem, 6vw, 4rem);
-    font-weight: 400;
-    margin: 0 0 1rem;
-    letter-spacing: -0.02em;
+  .work-intro h1 {
+    font-size: var(--step-display);
+    font-style: italic;
+    line-height: 1.02;
+    letter-spacing: -0.035em;
+    padding-bottom: 0.08em;
   }
 
-  .work-subtitle {
-    font-family: var(--font-mono);
-    font-size: 1rem;
-    color: var(--color-muted);
-    margin: 0;
+  .work-intro p {
+    margin-top: 1.25rem;
+    color: var(--ink-muted);
+    max-width: var(--measure);
   }
 
   .filters {
-    padding: 0 3rem 2rem;
-    max-width: 1400px;
-    margin: 0 auto;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-  }
-
-  .filter-buttons {
     display: flex;
-    gap: 0.5rem;
     flex-wrap: wrap;
+    gap: 0.5rem;
+    padding: 0 var(--gutter) 2rem;
   }
 
   .filter-btn {
     font-family: var(--font-mono);
-    font-size: 0.8rem;
-    letter-spacing: 0.05em;
+    font-size: var(--step-micro);
+    letter-spacing: 0.06em;
     padding: 0.5rem 1rem;
+    color: var(--ink-muted);
     background: transparent;
-    border: 1px solid var(--color-text);
-    border-radius: 20px;
+    border: 1px solid var(--rule);
+    border-radius: var(--radius-pill);
     cursor: pointer;
-    transition: all 0.3s ease;
-    text-transform: lowercase;
+    transition:
+      transform 160ms var(--ease-out),
+      background-color 200ms var(--ease-out),
+      border-color 200ms var(--ease-out),
+      color 200ms var(--ease-out);
   }
 
-  .filter-btn:hover,
-  .filter-btn.active {
-    background: var(--color-text);
-    color: var(--color-bg);
+  .filter-btn:active {
+    transform: scale(0.97);
+  }
+
+  .filter-btn[aria-pressed='true'] {
+    background: var(--ink);
+    border-color: var(--ink);
+    color: var(--paper);
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .filter-btn:hover:not([aria-pressed='true']) {
+      color: var(--ink);
+      border-color: var(--rule-strong);
+    }
   }
 
   .gallery {
-    padding: 3rem;
-    max-width: 1400px;
-    margin: 0 auto;
+    padding: clamp(2rem, 5vw, 3.5rem) var(--gutter) 0;
+    border-top: 1px solid var(--rule);
   }
 
+  /* Three across, but tiles carry different proportions so the grid reads as a
+     gallery rather than a row of identical cards. */
   .gallery-grid {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 2rem;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    align-items: start;
+    column-gap: clamp(1.25rem, 2.5vw, 2.25rem);
+    row-gap: clamp(2.5rem, 4.5vw, 3.5rem);
   }
 
-  .gallery-item {
-    text-decoration: none;
-    color: inherit;
+  .tile {
     display: flex;
     flex-direction: column;
-    opacity: 0;
-    animation: fadeInUp 0.6s ease forwards;
-    animation-delay: var(--delay);
-    transition: transform 0.3s ease;
+    gap: 0.75rem;
+    text-decoration: none;
   }
 
-  .gallery-item:hover {
-    transform: translateY(-8px);
-  }
-
-  .gallery-item.featured {
-    grid-column: span 1;
-  }
-
-  .gallery-item.hidden {
+  .tile[hidden] {
     display: none;
   }
 
-  .item-image {
-    position: relative;
-    aspect-ratio: 4/3;
+  .tile-frame {
+    display: block;
+    aspect-ratio: var(--ar, 4 / 3);
     overflow: hidden;
-    border-radius: 12px;
-    margin-bottom: 1rem;
+    border-radius: var(--radius-card);
+    background: var(--paper-raised);
+    margin-bottom: 0.5rem;
   }
 
-  .item-image img {
+  .tile-frame img {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    display: block;
-    transition: transform 0.5s ease;
+    transition: transform 700ms var(--ease-out);
   }
 
-  .gallery-item:hover .item-image img {
-    transform: scale(1.05);
-  }
-
-  .item-overlay {
-    position: absolute;
-    inset: 0;
-    background: rgba(0, 0, 0, 0.7);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    opacity: 0;
-    transition: opacity 0.3s ease;
-  }
-
-  .gallery-item:hover .item-overlay {
-    opacity: 1;
-  }
-
-  .view-project {
-    font-family: var(--font-mono);
-    font-size: 0.85rem;
-    color: white;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    padding: 0.75rem 1.25rem;
-    border: 1px solid white;
-    border-radius: 4px;
-    transition: all 0.3s ease;
-  }
-
-  .view-project svg {
-    width: 16px;
-    height: 16px;
-  }
-
-  .view-project:hover {
-    background: white;
-    color: black;
-  }
-
-  .item-info {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-  }
-
-  .item-meta {
+  .tile-meta {
     display: flex;
     justify-content: space-between;
-    align-items: center;
+    gap: 1rem;
+    font-size: var(--step-micro);
+    letter-spacing: 0.08em;
+    color: var(--ink-faint);
   }
 
-  .item-tags {
-    display: flex;
-    gap: 0.35rem;
-    flex-wrap: wrap;
+  .tile-year {
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
   }
 
-  .item-tag {
-    font-family: var(--font-mono);
-    font-size: 0.7rem;
-    text-transform: uppercase;
-    letter-spacing: 0.15em;
-    color: var(--color-muted);
-    background: rgba(0, 0, 0, 0.05);
-    padding: 0.25rem 0.5rem;
-    border-radius: 4px;
-  }
-
-  .item-year {
-    font-family: var(--font-mono);
-    font-size: 0.75rem;
-    color: var(--color-muted);
-  }
-
-  .item-title {
+  .tile-title {
     font-family: var(--font-display);
-    font-size: 1.25rem;
-    font-weight: 600;
-    margin: 0;
-    letter-spacing: -0.01em;
+    font-size: clamp(1.1rem, 1.6vw, 1.45rem);
+    line-height: 1.15;
+    letter-spacing: -0.02em;
   }
 
-  .item-description {
-    font-family: var(--font-mono);
-    font-size: 0.8rem;
-    line-height: 1.6;
-    color: var(--color-muted);
-    margin: 0;
+  .tile-desc {
+    color: var(--ink-muted);
+    font-size: var(--step-micro);
+    line-height: 1.7;
+    max-width: 46ch;
     display: -webkit-box;
-    -webkit-line-clamp: 4;
+    -webkit-line-clamp: 3;
     -webkit-box-orient: vertical;
     overflow: hidden;
   }
 
+  @media (hover: hover) and (pointer: fine) {
+    .tile:hover .tile-frame img {
+      transform: scale(1.03);
+    }
+  }
+
+  .gallery-empty {
+    padding: clamp(3rem, 8vw, 5rem) 0;
+    color: var(--ink-muted);
+    text-align: center;
+  }
+
   .work-footer {
-    padding: 4rem 3rem;
-    max-width: 1400px;
-    margin: 0 auto;
-    border-top: 1px solid rgba(0, 0, 0, 0.1);
+    margin-top: clamp(5rem, 12vw, 8rem);
+    padding: clamp(2.5rem, 6vw, 4rem) var(--gutter);
+    border-top: 1px solid var(--rule);
   }
 
   .back-link {
-    font-family: var(--font-mono);
-    font-size: 0.9rem;
-    color: var(--color-text);
-    text-decoration: none;
     display: inline-flex;
     align-items: center;
-    gap: 0.75rem;
-    transition: gap 0.3s ease;
-  }
-
-  .back-link:hover {
-    gap: 1rem;
+    gap: 0.6rem;
+    font-size: var(--step-micro);
+    letter-spacing: 0.08em;
+    color: var(--ink-muted);
+    text-decoration: none;
+    transition: color 200ms var(--ease-out);
   }
 
   .back-link svg {
-    width: 20px;
-    height: 20px;
+    width: 14px;
+    height: 14px;
+    transition: transform 260ms var(--ease-out);
   }
 
-  @keyframes fadeInUp {
-    from {
-      opacity: 0;
-      transform: translateY(30px);
+  @media (hover: hover) and (pointer: fine) {
+    .back-link:hover {
+      color: var(--ink);
     }
-    to {
-      opacity: 1;
-      transform: translateY(0);
+
+    .back-link:hover svg {
+      transform: translateX(-3px);
     }
   }
 
-  @media (max-width: 1024px) {
+  @media (max-width: 1080px) {
     .gallery-grid {
-      grid-template-columns: repeat(2, 1fr);
+      grid-template-columns: repeat(2, minmax(0, 1fr));
     }
   }
 
-  @media (max-width: 768px) {
-    .work-hero,
-    .filters,
-    .gallery,
-    .work-footer {
-      padding-left: 1.5rem;
-      padding-right: 1.5rem;
-    }
-
+  @media (max-width: 680px) {
     .gallery-grid {
-      grid-template-columns: 1fr;
-      gap: 2.5rem;
-    }
-
-    .work-title {
-      font-size: 2.5rem;
-    }
-
-    .filter-buttons {
-      gap: 0.5rem;
-    }
-
-    .filter-btn {
-      font-size: 0.75rem;
-      padding: 0.4rem 0.8rem;
+      grid-template-columns: minmax(0, 1fr);
     }
   }
 </style>
 
 <script>
-  const filterBtns = document.querySelectorAll('.filter-btn');
-  const galleryItems = document.querySelectorAll('.gallery-item');
+  import { gsap, ScrollTrigger, reducedMotion } from '../scripts/motion';
 
-  filterBtns.forEach(btn => {
+  const buttons = document.querySelectorAll<HTMLButtonElement>('.filter-btn');
+  const tiles = Array.from(document.querySelectorAll<HTMLElement>('.tile'));
+  const empty = document.querySelector<HTMLElement>('.gallery-empty');
+
+  buttons.forEach((btn) => {
     btn.addEventListener('click', () => {
-      // Update active state
-      filterBtns.forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
+      buttons.forEach((b) => b.setAttribute('aria-pressed', String(b === btn)));
 
-      const category = btn.getAttribute('data-category');
-
-      // Filter items
-      galleryItems.forEach((item, index) => {
-        const itemTags = (item.getAttribute('data-tags') || '').split(',');
-        
-        if (category === 'all' || itemTags.includes(category)) {
-          item.classList.remove('hidden');
-          (item as HTMLElement).style.setProperty('--delay', `${index * 0.05}s`);
-          item.classList.remove('fadeInUp');
-          void (item as HTMLElement).offsetWidth; // Trigger reflow
-          (item as HTMLElement).style.animation = 'none';
-          setTimeout(() => {
-            (item as HTMLElement).style.animation = '';
-          }, 10);
-        } else {
-          item.classList.add('hidden');
-        }
+      const category = btn.dataset.category;
+      const shown = tiles.filter((tile) => {
+        const match = category === 'all' || tile.dataset.discipline === category;
+        tile.hidden = !match;
+        return match;
       });
+
+      if (empty) empty.hidden = shown.length > 0;
+
+      // A tile revealed below the fold has no pending trigger left, so drive the
+      // filtered set directly and re-measure the triggers the hiding displaced.
+      if (reducedMotion()) {
+        gsap.set(shown, { opacity: 1, y: 0, filter: 'none' });
+      } else {
+        gsap.fromTo(
+          shown,
+          { opacity: 0, y: 18, filter: 'blur(6px)' },
+          { opacity: 1, y: 0, filter: 'blur(0px)', duration: 0.75, ease: 'expo.out', stagger: 0.05 }
+        );
+      }
+
+      ScrollTrigger.refresh();
     });
   });
 </script>
-

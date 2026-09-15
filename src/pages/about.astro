@@ -1,0 +1,596 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Header from '../components/Header.astro';
+import aboutData from '../data/about.json';
+import Trajectory from '../components/Trajectory.astro';
+
+const { images, essay } = aboutData;
+---
+
+<Layout
+  title="About Ilkin Mammadli"
+  description="Engineer, designer and builder working on immersive technology and generative AI."
+>
+  <Header />
+
+  <main class="about-page" id="main">
+    <div class="split">
+      <!-- Media column: stays put while the essay scrolls past it. -->
+      <div class="media-col">
+        <section class="media-sticky" aria-label="Photos of Ilkin">
+          <!-- Vertical filmstrip pinned to the outer edge of the page. -->
+          <div class="strip" role="tablist" aria-label="Choose a photo">
+            {images.map((image, i) => (
+              <button
+                class="thumb"
+                data-thumb={i}
+                role="tab"
+                aria-selected={i === 0 ? 'true' : 'false'}
+                aria-label={`Photo ${i + 1}`}
+              >
+                <img src={image.src} alt="" loading="lazy" decoding="async" />
+              </button>
+            ))}
+          </div>
+
+          <div class="deck-wrap">
+            <div class="deck" data-deck>
+              {images.map((image, i) => (
+                <figure class="photo" data-photo={i}>
+                  <img
+                    src={image.src}
+                    alt={image.alt}
+                    loading={i < 2 ? 'eager' : 'lazy'}
+                    decoding="async"
+                  />
+                </figure>
+              ))}
+            </div>
+
+            <div class="deck-bar">
+              <button class="deck-btn" data-toggle aria-pressed="false" aria-label="Pause slideshow">
+                <svg class="icon-pause" viewBox="0 0 16 16" aria-hidden="true">
+                  <rect x="4" y="3" width="3" height="10" rx="1" fill="currentColor"/>
+                  <rect x="9" y="3" width="3" height="10" rx="1" fill="currentColor"/>
+                </svg>
+                <svg class="icon-play" viewBox="0 0 16 16" aria-hidden="true">
+                  <path d="M5 3.5l7 4.5-7 4.5z" fill="currentColor"/>
+                </svg>
+              </button>
+
+              <span class="progress" aria-hidden="true"><span class="progress-fill" data-progress></span></span>
+
+              <p class="counter">
+                <span data-counter>01</span><span class="counter-total">/{String(images.length).padStart(2, '0')}</span>
+              </p>
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <div class="rail" aria-hidden="true"><span class="rail-dot" data-rail-dot></span></div>
+
+      <article class="essay" data-essay>
+        <p class="eyebrow" data-reveal>about</p>
+
+        {essay.map((block) =>
+          block.type === 'map' ? (
+            <Trajectory />
+          ) : block.type === 'lead' ? (
+            <h1 class="lead" data-reveal>{block.text}</h1>
+          ) : block.type === 'pull' ? (
+            <p class="pull" data-reveal>{block.text}</p>
+          ) : (
+            <p class="body" data-reveal>{block.text}</p>
+          )
+        )}
+
+        <a href="/#contact" class="essay-cta" data-reveal>
+          get in touch
+          <svg viewBox="0 0 16 16" fill="none" aria-hidden="true">
+            <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </a>
+      </article>
+    </div>
+  </main>
+</Layout>
+
+<style>
+  .about-page {
+    overflow-x: clip;
+    padding: calc(var(--nav-clear) + clamp(2.25rem, 5vh, 4rem)) var(--gutter) clamp(4rem, 10vh, 7rem);
+  }
+
+  .split {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 1px minmax(0, 1fr);
+    gap: clamp(1.5rem, 4vw, 3.5rem);
+    max-width: 1500px;
+    margin: 0 auto;
+    /* No align-items: start here. The columns must stretch to the full row
+       height, otherwise the sticky media column has no room to travel and
+       simply scrolls away with the essay. */
+  }
+
+  .media-col,
+  .media-sticky {
+    min-width: 0;
+  }
+
+  /* The sticky child needs a tall containing block to stick against. */
+  .media-col {
+    height: 100%;
+  }
+
+  .media-sticky {
+    position: sticky;
+    top: calc(var(--nav-clear) + clamp(1rem, 2vh, 1.5rem));
+    height: calc(100dvh - var(--nav-clear) - clamp(2.5rem, 6vh, 4.5rem));
+    display: flex;
+    gap: clamp(0.6rem, 1.2vw, 1rem);
+  }
+
+  .strip {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    flex-shrink: 0;
+    width: clamp(46px, 4vw, 62px);
+    min-height: 0;
+    overflow-y: auto;
+    scrollbar-width: none;
+  }
+
+  .strip::-webkit-scrollbar {
+    display: none;
+  }
+
+  .thumb {
+    /* Fixed square, never stretched to fill the column, so faces stay undistorted. */
+    flex: 0 0 auto;
+    width: 100%;
+    aspect-ratio: 1;
+    padding: 0;
+    border: none;
+    border-radius: var(--radius);
+    overflow: hidden;
+    cursor: pointer;
+    background: var(--paper-raised);
+    opacity: 0.38;
+    filter: grayscale(1);
+    outline: 1.5px solid transparent;
+    outline-offset: 2px;
+    transition:
+      opacity 380ms var(--ease-out),
+      filter 380ms var(--ease-out),
+      outline-color 380ms var(--ease-out),
+      transform 380ms var(--ease-out);
+  }
+
+  .thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .thumb[aria-selected='true'] {
+    opacity: 1;
+    filter: none;
+    outline-color: var(--accent);
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .thumb:hover {
+      opacity: 0.8;
+      filter: none;
+      transform: translateX(2px);
+    }
+  }
+
+  .deck-wrap {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.85rem;
+  }
+
+  /* Photo deck: a physical pile, echoing the card stack on the homepage. */
+  .deck {
+    position: relative;
+    flex: 1;
+    min-height: 0;
+    perspective: 1400px;
+  }
+
+  .photo {
+    position: absolute;
+    inset: 0;
+    border-radius: var(--radius-card);
+    overflow: hidden;
+    background: var(--paper-raised);
+    border: 1px solid var(--rule);
+    box-shadow: 0 30px 70px color-mix(in srgb, #000 34%, transparent);
+    will-change: transform, opacity;
+  }
+
+  .photo img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .deck-bar {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex-shrink: 0;
+  }
+
+  .deck-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 34px;
+    height: 34px;
+    flex-shrink: 0;
+    border: 1px solid var(--rule-strong);
+    border-radius: var(--radius-pill);
+    background: transparent;
+    color: var(--ink-muted);
+    cursor: pointer;
+    transition:
+      background-color 300ms var(--ease-out),
+      color 300ms var(--ease-out),
+      border-color 300ms var(--ease-out),
+      transform 180ms var(--ease-out);
+  }
+
+  .deck-btn svg {
+    width: 13px;
+    height: 13px;
+  }
+
+  .deck-btn .icon-play { display: none; }
+  .deck-btn[aria-pressed='true'] .icon-pause { display: none; }
+  .deck-btn[aria-pressed='true'] .icon-play { display: block; }
+
+  .deck-btn:active {
+    transform: scale(0.92);
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .deck-btn:hover {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: var(--paper);
+    }
+  }
+
+  /* Runs while the current photo is on screen, so the pause button has meaning. */
+  .progress {
+    flex: 1;
+    min-width: 0;
+    height: 2px;
+    border-radius: var(--radius-pill);
+    background: var(--rule-strong);
+    overflow: hidden;
+  }
+
+  .progress-fill {
+    display: block;
+    height: 100%;
+    width: 100%;
+    border-radius: inherit;
+    background: var(--accent);
+    transform: scaleX(0);
+    transform-origin: 0 50%;
+  }
+
+  .counter {
+    flex-shrink: 0;
+    font-size: var(--step-micro);
+    letter-spacing: 0.1em;
+    color: var(--ink);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .counter-total {
+    color: var(--ink-faint);
+  }
+
+  /* Progress rail between the two columns. */
+  .rail {
+    position: sticky;
+    top: calc(var(--nav-clear) + clamp(1rem, 2vh, 1.5rem));
+    height: calc(100dvh - var(--nav-clear) - clamp(2.5rem, 6vh, 4.5rem));
+    width: 1px;
+    background: var(--rule);
+    justify-self: center;
+  }
+
+  .rail-dot {
+    position: absolute;
+    left: 50%;
+    top: 0;
+    width: 9px;
+    height: 9px;
+    margin-left: -4.5px;
+    border-radius: var(--radius-pill);
+    background: var(--accent);
+    box-shadow: 0 0 0 4px color-mix(in srgb, var(--accent) 18%, transparent);
+  }
+
+  .essay {
+    display: flex;
+    flex-direction: column;
+    max-width: 62ch;
+    padding-block: clamp(0.5rem, 3vh, 2rem) 20vh;
+  }
+
+  .eyebrow {
+    font-size: var(--step-micro);
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    margin-bottom: 2.25rem;
+  }
+
+  .lead {
+    font-size: clamp(1.9rem, 3.4vw, 3.1rem);
+    line-height: 1.14;
+    letter-spacing: -0.03em;
+    margin-bottom: 2.5rem;
+  }
+
+  .body {
+    color: var(--ink-muted);
+    line-height: 1.85;
+    margin-bottom: 1.6rem;
+  }
+
+  .pull {
+    font-family: var(--font-display);
+    font-size: clamp(1.5rem, 2.7vw, 2.35rem);
+    line-height: 1.24;
+    letter-spacing: -0.025em;
+    color: var(--ink);
+    margin: 2.75rem 0 2.25rem;
+  }
+
+  .essay-cta {
+    display: inline-flex;
+    align-items: center;
+    align-self: flex-start;
+    gap: 0.6rem;
+    margin-top: 1.5rem;
+    padding: 0.7rem 1.35rem;
+    border: 1px solid var(--rule-strong);
+    border-radius: var(--radius-pill);
+    font-size: var(--step-micro);
+    letter-spacing: 0.06em;
+    text-decoration: none;
+    white-space: nowrap;
+    transition:
+      background-color 320ms var(--ease-out),
+      color 320ms var(--ease-out),
+      border-color 320ms var(--ease-out),
+      transform 160ms var(--ease-out);
+  }
+
+  .essay-cta svg {
+    width: 14px;
+    height: 14px;
+    transition: transform 280ms var(--ease-out);
+  }
+
+  .essay-cta:active {
+    transform: scale(0.97);
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .essay-cta:hover {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: var(--paper);
+    }
+
+    .essay-cta:hover svg {
+      transform: translateX(3px);
+    }
+  }
+
+  @media (max-width: 900px) {
+    /* minmax(0, 1fr), not 1fr, so a wide child can never force the track
+       past the viewport. */
+    .split {
+      grid-template-columns: minmax(0, 1fr);
+      gap: 2.5rem;
+    }
+
+    /* Media unpins on small screens so it never eats the whole viewport, and the
+       filmstrip lies down under the deck where vertical space is scarce. */
+    .media-sticky {
+      position: static;
+      height: auto;
+      flex-direction: column-reverse;
+    }
+
+    .deck {
+      aspect-ratio: 4 / 5;
+      max-height: 70vh;
+      flex: none;
+    }
+
+    .strip {
+      flex-direction: row;
+      width: auto;
+      height: 54px;
+      overflow-x: auto;
+      overflow-y: hidden;
+    }
+
+    .thumb {
+      flex: 0 0 54px;
+      min-height: 0;
+    }
+
+    .rail {
+      display: none;
+    }
+
+    .essay {
+      max-width: none;
+      padding-block: 0 0;
+    }
+  }
+
+</style>
+
+<script>
+  import { gsap, reducedMotion } from '../scripts/motion';
+
+  const photos = Array.from(document.querySelectorAll<HTMLElement>('[data-photo]'));
+  const thumbs = Array.from(document.querySelectorAll<HTMLElement>('[data-thumb]'));
+  const fill = document.querySelector<HTMLElement>('[data-progress]');
+  const counter = document.querySelector<HTMLElement>('[data-counter]');
+  const toggle = document.querySelector<HTMLButtonElement>('[data-toggle]');
+  const essay = document.querySelector<HTMLElement>('[data-essay]');
+  const dot = document.querySelector<HTMLElement>('[data-rail-dot]');
+
+  const INTERVAL = 4200;
+  const N = photos.length;
+  let index = 0;
+  let playing = false;
+  let tween: gsap.core.Tween | undefined;
+
+  // Pose per depth in the pile. The card that just left the front gets dealt
+  // downward and out rather than fading in place.
+  function poseFor(depth: number) {
+    if (depth === 0) return { y: 0, scale: 1, rotate: 0, opacity: 1 };
+    if (depth === 1) return { y: -10, scale: 0.97, rotate: -3, opacity: 1 };
+    if (depth === 2) return { y: -18, scale: 0.94, rotate: 3.5, opacity: 1 };
+    if (depth === 3) return { y: -26, scale: 0.91, rotate: -2, opacity: 0.55 };
+    if (depth === N - 1) return { y: 80, scale: 0.95, rotate: 7, opacity: 0 };
+    return { y: -30, scale: 0.9, rotate: 0, opacity: 0 };
+  }
+
+  // Scrolls only the filmstrip's own scroll container, never the document.
+  // `.strip` is a column on desktop and a row on mobile, so this checks
+  // both axes rather than assuming one; `Element.scrollIntoView` was the
+  // previous approach, but it also walks up to the page's own scroll
+  // container, and with the global `scroll-behavior: smooth` on <html> any
+  // adjustment there played out as a visible page-scroll on every autoplay
+  // tick — exactly what a filmstrip that already fits on screen should not
+  // cause.
+  function scrollThumbIntoView(thumb: HTMLElement) {
+    const strip = thumb.parentElement;
+    if (!strip) return;
+
+    if (strip.scrollWidth > strip.clientWidth) {
+      strip.scrollTo({
+        left: thumb.offsetLeft - (strip.clientWidth - thumb.offsetWidth) / 2,
+        behavior: 'smooth',
+      });
+    }
+
+    if (strip.scrollHeight > strip.clientHeight) {
+      strip.scrollTo({
+        top: thumb.offsetTop - (strip.clientHeight - thumb.offsetHeight) / 2,
+        behavior: 'smooth',
+      });
+    }
+  }
+
+  function layout(animate: boolean) {
+    photos.forEach((el, i) => {
+      const depth = (i - index + N) % N;
+      const pose = poseFor(depth);
+      el.style.zIndex = String(N - depth);
+
+      // Cards parked deep in the pile jump instead of animating unseen.
+      const silent = pose.opacity === 0 && depth !== N - 1;
+      if (animate && !silent) gsap.to(el, { ...pose, duration: 0.9, ease: 'expo.out' });
+      else gsap.set(el, pose);
+    });
+
+    thumbs.forEach((t, i) => {
+      t.setAttribute('aria-selected', String(i === index));
+      if (i === index) scrollThumbIntoView(t);
+    });
+    if (counter) counter.textContent = String(index + 1).padStart(2, '0');
+  }
+
+  // The progress bar is the clock: when it finishes, the deck advances.
+  function armAdvance() {
+    tween?.kill();
+    if (!fill) return;
+    tween = gsap.fromTo(
+      fill,
+      { scaleX: 0 },
+      {
+        scaleX: 1,
+        duration: INTERVAL / 1000,
+        ease: 'none',
+        onComplete: () => show(index + 1),
+      }
+    );
+  }
+
+  function show(next: number, animate = true) {
+    index = (next + N) % N;
+    layout(animate);
+    if (playing) armAdvance();
+  }
+
+  function play() {
+    playing = true;
+    toggle?.setAttribute('aria-pressed', 'false');
+    toggle?.setAttribute('aria-label', 'Pause slideshow');
+    armAdvance();
+  }
+
+  function stop() {
+    playing = false;
+    tween?.kill();
+    toggle?.setAttribute('aria-pressed', 'true');
+    toggle?.setAttribute('aria-label', 'Play slideshow');
+  }
+
+  if (N) {
+    show(0, false);
+
+    // Picking a photo is a deliberate choice, so stop the rotation and stay on
+    // it rather than sliding away a few seconds later.
+    thumbs.forEach((thumb, i) =>
+      thumb.addEventListener('click', () => {
+        stop();
+        show(i);
+        if (fill) gsap.set(fill, { scaleX: 0 });
+      })
+    );
+
+    toggle?.addEventListener('click', () => (playing ? stop() : play()));
+
+    // Autoplay is motion nobody asked for, so reduced motion opts out.
+    if (reducedMotion()) {
+      stop();
+      if (fill) gsap.set(fill, { scaleX: 0 });
+    } else {
+      play();
+    }
+
+    document.addEventListener('visibilitychange', () => {
+      if (document.hidden && playing) stop();
+    });
+  }
+
+  if (essay && dot && !reducedMotion()) {
+    gsap.to(dot, {
+      top: '100%',
+      ease: 'none',
+      scrollTrigger: { trigger: essay, start: 'top top', end: 'bottom bottom', scrub: 0.4 },
+    });
+  }
+</script>

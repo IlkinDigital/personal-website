@@ -1,0 +1,262 @@
+---
+/**
+ * Barely-visible ASCII portrait behind the page. The art is read and prepared
+ * at build time, so the browser only pays for the blink pass.
+ */
+import artRaw from '../../public/ascii-art.txt?raw';
+
+// The converter fills its background with '.', which would read as static
+// around the portrait. Dropping it leaves only the drawing. What remains runs
+// lightest to heaviest, and doubles as the ramp the blink pass walks along.
+const RAMP = ' :-=+*#%@';
+
+const source = artRaw
+  .replace(/\r/g, '')
+  .split('\n')
+  .filter((row) => row.length > 0)
+  .map((row) => row.replace(/\./g, ' '));
+
+/** Crops away the fully blank rows and columns around the drawing. */
+function trim(grid: string[]) {
+  let top = grid.length;
+  let bottom = -1;
+  let left = Infinity;
+  let right = -1;
+
+  grid.forEach((row, y) => {
+    const first = row.search(/\S/);
+    if (first === -1) return;
+    top = Math.min(top, y);
+    bottom = y;
+    left = Math.min(left, first);
+    right = Math.max(right, row.trimEnd().length - 1);
+  });
+
+  if (bottom === -1) return grid;
+  return grid
+    .slice(top, bottom + 1)
+    .map((row) => row.slice(left, right + 1).padEnd(right - left + 1, ' '));
+}
+
+/**
+ * Shrinks the grid by averaging each block's position on the ramp. Taking the
+ * heaviest glyph instead turns any block containing one '@' into an '@', which
+ * inks the whole portrait in far darker than the full-resolution version.
+ */
+function downsample(grid: string[], factor: number) {
+  const out: string[] = [];
+  for (let y = 0; y < grid.length; y += factor) {
+    let line = '';
+    for (let x = 0; x < grid[0].length; x += factor) {
+      let total = 0;
+      for (let dy = 0; dy < factor; dy += 1) {
+        for (let dx = 0; dx < factor; dx += 1) {
+          total += Math.max(0, RAMP.indexOf(grid[y + dy]?.[x + dx] ?? ' '));
+        }
+      }
+      line += RAMP[Math.round(total / (factor * factor))];
+    }
+    out.push(line);
+  }
+  return out;
+}
+
+const trimmed = trim(source);
+// A 234-column drawing needs more width than a phone has at any legible glyph
+// size, so narrow screens get the same portrait at a third of the resolution.
+const wide = trimmed.join('\n');
+const narrow = downsample(trimmed, 3).join('\n');
+---
+
+<pre class="ascii-bg ascii-bg--wide" aria-hidden="true" data-ascii-field data-ramp={RAMP}>{wide}</pre>
+<pre class="ascii-bg ascii-bg--narrow" aria-hidden="true" data-ascii-field data-ramp={RAMP}>{narrow}</pre>
+
+<style>
+  .ascii-bg {
+    /* Taller than the viewport so the drift never exposes its bottom edge. */
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 132vh;
+    padding-top: 6vh;
+    z-index: -1;
+    margin: 0;
+    overflow: hidden;
+    pointer-events: none;
+    user-select: none;
+    /* Every line is the same number of characters, so centring the lines
+       centres the drawing and lets it overflow both edges evenly. */
+    text-align: center;
+
+    font-family: var(--font-mono);
+    /* Scaled off the viewport height: the portrait is roughly square once the
+       2:1 character cell is accounted for, and height is the tighter fit. */
+    font-size: clamp(4px, 0.72vh, 11px);
+    line-height: 1.2;
+    white-space: pre;
+
+    /* The fade lives in the gradient rather than in a flat opacity, so the
+       portrait resolves near the top and dissolves into the page below. */
+    color: transparent;
+    background-image: linear-gradient(
+      180deg,
+      var(--ascii-strong) 0%,
+      var(--ascii-soft) 48%,
+      transparent 85%
+    );
+    -webkit-background-clip: text;
+    background-clip: text;
+
+    /* Second axis: let it run off the side edges instead of stopping flat. */
+    -webkit-mask-image: linear-gradient(
+      90deg,
+      transparent 0%,
+      #000 12%,
+      #000 88%,
+      transparent 100%
+    );
+    mask-image: linear-gradient(
+      90deg,
+      transparent 0%,
+      #000 12%,
+      #000 88%,
+      transparent 100%
+    );
+
+    animation: ascii-drift 90s var(--ease-in-out) infinite alternate;
+    will-change: transform;
+  }
+
+  /* Dark ink on paper carries much further than light ink on black, so the two
+     schemes need different weights to land at the same visual quiet. */
+  :root .ascii-bg {
+    --ascii-strong: rgb(20 20 20 / 0.1);
+    --ascii-soft: rgb(20 20 20 / 0.04);
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root .ascii-bg {
+      --ascii-strong: rgb(237 237 235 / 0.26);
+      --ascii-soft: rgb(237 237 235 / 0.1);
+    }
+  }
+
+  .ascii-bg--narrow {
+    display: none;
+  }
+
+  @media (max-width: 720px) {
+    .ascii-bg--wide {
+      display: none;
+    }
+
+    .ascii-bg--narrow {
+      display: block;
+      font-size: clamp(7px, 2.3vw, 14px);
+    }
+  }
+
+  /* Bigger glyphs on a coarser grid put more ink on screen per character, so
+     this variant needs pulling back to sit as quietly as the wide one. The
+     :root prefix keeps these at the same specificity as the rules above. */
+  @media (max-width: 720px) {
+    :root .ascii-bg--narrow {
+      --ascii-strong: rgb(20 20 20 / 0.07);
+      --ascii-soft: rgb(20 20 20 / 0.03);
+    }
+  }
+
+  @media (max-width: 720px) and (prefers-color-scheme: dark) {
+    :root .ascii-bg--narrow {
+      --ascii-strong: rgb(237 237 235 / 0.15);
+      --ascii-soft: rgb(237 237 235 / 0.06);
+    }
+  }
+
+  @keyframes ascii-drift {
+    from {
+      transform: translateY(0);
+    }
+    to {
+      transform: translateY(-1.8%);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .ascii-bg {
+      animation: none;
+    }
+  }
+</style>
+
+<script>
+  import { reducedMotion } from '../scripts/motion';
+
+  /** Nudges random characters a shade along the ramp and back, forever. */
+  function animate(field: HTMLPreElement) {
+    const ramp = field.dataset.ramp ?? '';
+    if (!ramp) return;
+
+    const cells = (field.textContent ?? '').split('');
+    // Roughly 0.3% of the grid is mid-blink at any moment.
+    const perTick = Math.max(6, Math.round(cells.length * 0.003));
+    const live = new Map<number, { char: string; ttl: number }>();
+    let timer = 0;
+
+    const tick = () => {
+      // Only one of the two fields is displayed at a time; rewriting the other
+      // one's text would relayout a few thousand glyphs for nothing.
+      if (!field.getClientRects().length) return;
+
+      for (const [index, entry] of live) {
+        entry.ttl -= 1;
+        if (entry.ttl <= 0) {
+          cells[index] = entry.char;
+          live.delete(index);
+        }
+      }
+
+      for (let i = 0; i < perTick; i += 1) {
+        const index = Math.floor(Math.random() * cells.length);
+        const char = cells[index];
+        if (live.has(index)) continue;
+
+        // Only glyphs that are already part of the drawing blink: lighting up
+        // blank cells would scatter noise around the portrait.
+        const at = ramp.indexOf(char);
+        if (at < 1) continue;
+
+        // Nudge along the ramp, so the character flickers a shade heavier or
+        // lighter rather than switching to something unrelated.
+        const step = Math.random() < 0.5 ? -1 : 1;
+        const next = ramp[Math.min(ramp.length - 1, Math.max(1, at + step))];
+
+        live.set(index, { char, ttl: 1 + Math.floor(Math.random() * 3) });
+        cells[index] = next;
+      }
+
+      field.textContent = cells.join('');
+    };
+
+    const start = () => {
+      if (!timer) timer = window.setInterval(tick, 150);
+    };
+    const stop = () => {
+      window.clearInterval(timer);
+      timer = 0;
+    };
+
+    // No point burning frames on a backgrounded tab.
+    document.addEventListener('visibilitychange', () =>
+      document.hidden ? stop() : start(),
+    );
+    start();
+  }
+
+  if (!reducedMotion()) {
+    document
+      .querySelectorAll<HTMLPreElement>('[data-ascii-field]')
+      .forEach(animate);
+  }
+</script>

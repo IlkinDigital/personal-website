@@ -1,0 +1,147 @@
+---
+// Baku sits east of Atlanta, so the arc is drawn right to left: the direction
+// the journey actually went.
+const ARC = 'M 636 128 C 470 18, 250 18, 84 148';
+---
+
+<figure class="trajectory" data-trajectory>
+  <svg viewBox="0 0 720 190" role="img" aria-label="Route from Baku, Azerbaijan to Atlanta, Georgia, about 6,500 miles west">
+    <path class="arc-ghost" d={ARC} />
+    <path class="arc" d={ARC} data-arc />
+
+    <g class="node" transform="translate(636 128)">
+      <circle class="node-ring" r="9" />
+      <circle class="node-dot" r="3.5" />
+    </g>
+
+    <g class="node" transform="translate(84 148)">
+      <circle class="node-ring" r="9" />
+      <circle class="node-dot" r="3.5" />
+    </g>
+
+    <circle class="tracer" r="4.5" data-tracer />
+
+    <text class="label" x="636" y="158" text-anchor="middle">baku</text>
+    <text class="coord" x="636" y="176" text-anchor="middle">40.41 N  49.87 E</text>
+
+    <text class="label" x="84" y="178" text-anchor="middle">atlanta</text>
+    <text class="coord" x="84" y="196" text-anchor="middle">33.75 N  84.39 W</text>
+
+    <text class="distance" x="360" y="35" text-anchor="middle">6,500 mi west</text>
+  </svg>
+</figure>
+
+<style>
+  .trajectory {
+    margin: 2.5rem 0 2.75rem;
+  }
+
+  .trajectory svg {
+    width: 100%;
+    height: auto;
+    overflow: visible;
+  }
+
+  .arc-ghost,
+  .arc {
+    fill: none;
+    stroke-width: 1.25;
+    stroke-linecap: round;
+  }
+
+  .arc-ghost {
+    stroke: var(--rule);
+    stroke-dasharray: 3 6;
+  }
+
+  .arc {
+    stroke: var(--accent);
+  }
+
+  .node-ring {
+    fill: none;
+    stroke: var(--accent);
+    stroke-width: 1;
+    opacity: 0.45;
+  }
+
+  .node-dot {
+    fill: var(--accent);
+  }
+
+  .tracer {
+    fill: var(--accent);
+    opacity: 0;
+    filter: drop-shadow(0 0 6px color-mix(in srgb, var(--accent) 70%, transparent));
+  }
+
+  .label,
+  .coord,
+  .distance {
+    font-family: var(--font-mono);
+    fill: var(--ink-muted);
+  }
+
+  .label {
+    font-size: 15px;
+    letter-spacing: 0.06em;
+  }
+
+  .coord,
+  .distance {
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    fill: var(--ink-faint);
+  }
+
+  /* Without JS or motion the arc is simply drawn in full. */
+  :global(.js) .arc {
+    stroke-dasharray: var(--len);
+    stroke-dashoffset: var(--len);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    :global(.js) .arc {
+      stroke-dashoffset: 0;
+    }
+  }
+</style>
+
+<script>
+  import { gsap, reducedMotion } from '../scripts/motion';
+
+  const figure = document.querySelector<HTMLElement>('[data-trajectory]');
+  const arc = document.querySelector<SVGPathElement>('[data-arc]');
+  const tracer = document.querySelector<SVGCircleElement>('[data-tracer]');
+
+  if (figure && arc) {
+    const len = arc.getTotalLength();
+    arc.style.setProperty('--len', String(len));
+
+    if (reducedMotion()) {
+      arc.style.strokeDashoffset = '0';
+    } else {
+      const state = { p: 0 };
+
+      gsap.to(state, {
+        p: 1,
+        ease: 'none',
+        scrollTrigger: {
+          trigger: figure,
+          start: 'top 85%',
+          end: 'bottom 60%',
+          scrub: 0.5,
+        },
+        onUpdate: () => {
+          arc.style.strokeDashoffset = String(len * (1 - state.p));
+          if (!tracer) return;
+          // Ride the drawn end of the line without a motion-path plugin.
+          const pt = arc.getPointAtLength(len * state.p);
+          tracer.setAttribute('cx', String(pt.x));
+          tracer.setAttribute('cy', String(pt.y));
+          tracer.style.opacity = state.p > 0.02 && state.p < 0.98 ? '1' : '0';
+        },
+      });
+    }
+  }
+</script>

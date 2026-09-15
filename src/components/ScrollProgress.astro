@@ -1,0 +1,44 @@
+---
+// Hairline read-progress bar. Conveys real scroll state, so it earns its motion.
+---
+
+<div class="scroll-progress" aria-hidden="true"></div>
+
+<style>
+  .scroll-progress {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    z-index: 120;
+    background: var(--accent);
+    transform-origin: 0 50%;
+    transform: scaleX(0);
+    opacity: 0;
+  }
+
+  /* Only shown where the scroll timeline can actually drive it. */
+  @supports (animation-timeline: scroll()) {
+    .scroll-progress {
+      opacity: 1;
+      animation: read-progress linear both;
+      animation-timeline: scroll(root block);
+    }
+  }
+
+  @keyframes read-progress {
+    from {
+      transform: scaleX(0);
+    }
+    to {
+      transform: scaleX(1);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .scroll-progress {
+      display: none;
+    }
+  }
+</style>

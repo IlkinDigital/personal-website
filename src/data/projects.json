@@ -5,7 +5,13 @@
       "title": "WalFeed",
       "description": "An anonymous social media platform for students in Azerbaijan to share their ideas and advice with their community.",
       "shortDescription": "Anonymous social media platform for students in Azerbaijan",
-      "tags": ["web dev", "React", "JS", "Supabase", "PostgreSQL"],
+      "tags": [
+        "web dev",
+        "React",
+        "JS",
+        "Supabase",
+        "PostgreSQL"
+      ],
       "year": "2026",
       "link": "https://www.walfeed.net/",
       "image": "/projects/walfeed.png",
@@ -16,7 +22,11 @@
       "title": "vast engine",
       "description": "a custom game engine for real-time applications development with modern rendering pipeline and cross-platform support",
       "shortDescription": "custom game engine for real-time applications development",
-      "tags": ["graphics", "C++", "OpenGL"],
+      "tags": [
+        "graphics",
+        "C++",
+        "OpenGL"
+      ],
       "year": "2023",
       "link": "https://github.com/IlkinDigital/VastEngine",
       "image": "/projects/vast-engine.png",
@@ -27,7 +37,9 @@
       "title": "GTXR",
       "description": "student organization for immersive technology and extended reality at georgia tech, hosting workshops and hackathons",
       "shortDescription": "student organization for immersive technology and extended reality",
-      "tags": ["organization"],
+      "tags": [
+        "organization"
+      ],
       "year": "2023-2025",
       "link": "https://www.gtxr.club/",
       "image": "/projects/gtxr.jpeg",
@@ -38,9 +50,11 @@
       "title": "ImmerseGT 2025",
       "description": "Directed ImmerseGT 2025, one of the largest XR hackathons in the world. Bringing together students and industry professionals to build innovative XR solutions. Sponsored by Snap, Niantic, Meshy, and more.",
       "shortDescription": "Directed ImmerseGT 2025, one of the largest XR hackathons in the world.",
-      "tags": ["organization"],
+      "tags": [
+        "organization"
+      ],
       "year": "2025",
-      "link": "https://www.immersegt.com/",
+      "link": "https://www.immersegt.org/",
       "image": "/projects/immersegt.jpg",
       "featured": true
     },
@@ -49,20 +63,30 @@
       "title": "Flashys",
       "description": "Tattoo app that lets users visualize tattoos on their bodies using computer vision and augmented reality. Built using Unity during Georgia Tech's HackGT X.",
       "shortDescription": "AR tattoo app that lets users visualize tattoos on their bodies.",
-      "tags": ["xr", "Unity", "C#", "Java"],
+      "tags": [
+        "xr",
+        "Unity",
+        "C#",
+        "Java"
+      ],
       "year": "2023",
-      "link": "https://devpost.com/software/flashys?ref_content=my-projects-tab&ref_feature=my_projects",
+      "link": "https://devpost.com/software/flashys",
       "image": "/projects/flashys.png",
       "featured": true
     },
     {
       "id": "rosa",
       "title": "Project Rosa",
-      "description": "Mixed Reality colocated furniture and home decor platform that let's users visualize new furniture in their homes on Meta Quest before purchasing. Developed with a team of 2 developers and 2 designers during MIT's Reality Hack 2025.",
+      "description": "Mixed Reality colocated furniture and home decor platform that lets users visualize new furniture in their homes on Meta Quest before purchasing. Developed with a team of 2 developers and 2 designers during MIT's Reality Hack 2025.",
       "shortDescription": "Mixed Reality furniture and home decor platform on Meta Quest.",
-      "tags": ["xr", "Unity", "C#", "Meta SDK"],
+      "tags": [
+        "xr",
+        "Unity",
+        "C#",
+        "Meta SDK"
+      ],
       "year": "2025",
-      "link": "https://devpost.com/software/rosa-7d1p05?_gl=1*1y0wokr*_gcl_au*MjEwODY4NzQ2Ny4xNzY5OTA0OTYz*_ga*MjAxMDMwNzY0Mi4xNzY5OTA0OTYz*_ga_0YHJK3Y10M*czE3NzA5MzQ5MzAkbzQkZzAkdDE3NzA5MzQ5MzAkajYwJGwwJGgw",
+      "link": "https://devpost.com/software/rosa-7d1p05",
       "image": "/projects/rosa.png",
       "featured": true
     },
@@ -71,7 +95,12 @@
       "title": "Spotify Wrapped",
       "description": "Collaborated with a team to build a full-stack web app using Python (Django) and HTML/CSS that visualizes users’ top artists, songs, and genres from Spotify; deployed on Heroku for public access.",
       "shortDescription": "Full-stack web app that visualizes Spotify users' top artists, songs, and genres.",
-      "tags": ["web dev", "python", "django", "spotify api"],
+      "tags": [
+        "web dev",
+        "python",
+        "django",
+        "spotify api"
+      ],
       "year": "2024",
       "link": "https://github.com/IlkinDigital/spotify-taste-summary",
       "image": "/projects/spotify.png",
@@ -79,4 +108,3 @@
     }
   ]
 }
-
